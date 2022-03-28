@@ -10,6 +10,12 @@ public class Board {
                 board[y][x] = new Cell(0);
             }
     }
+    public Board(int[][] board){
+        for (int y = 0; y<BOARD_SIZE; y++)
+            for (int x = 0; x<BOARD_SIZE; x++){
+                this.board[y][x] = new Cell(board[y][x]);
+            }
+    }
 
     public void readSudokuString(String sudoku){
         if (sudoku.length() != 81)

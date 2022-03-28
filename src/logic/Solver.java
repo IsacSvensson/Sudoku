@@ -3,21 +3,30 @@ package logic;
 import game.Board;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class Solver {
     int[][] board;
     public Solver(int[][] board){
         this.board = board;
     }
+    public boolean multipleSolutionsExist(){
+        int[] solutions = new int[1];
+
+        countSolutions(solutions, 2);
+
+        return solutions[0] > 1;
+    }
+
     public int findSolutions(){
         int[] solutions = new int[1];
 
-        countSolutions(solutions);
+        countSolutions(solutions, Integer.MAX_VALUE);
 
         return solutions[0];
     }
 
-    private boolean countSolutions(int[] solutions){
+    private boolean countSolutions(int[] solutions, int maxValue){
         int[] emptyCell = findEmptyCell();
         if (emptyCell == null){
             solutions[0]++;
@@ -31,8 +40,11 @@ public class Solver {
 
         for (int number: possibleValues) {
             board[y][x] = number;
-            countSolutions(solutions);
+            countSolutions(solutions, maxValue);
             board[y][x] = 0;
+            if (solutions[0] >= maxValue){
+                return true;
+            }
         }
 
         return false;
@@ -108,6 +120,7 @@ public class Solver {
                 count++;
             }
         }
+        shuffleArray(possibleNumbers);
 
         return possibleNumbers;
     }
@@ -153,6 +166,16 @@ public class Solver {
                 if (board[y][x] == number+1)
                     possibleValuesInRow[number] = false;
             possibleValues[number] &= possibleValuesInRow[number];
+        }
+    }
+    private void shuffleArray(int[] arr){
+        Random rand = new Random();
+
+        for (int i = 0; i < arr.length; i++) {
+            int randomIndexToSwap = rand.nextInt(arr.length);
+            int temp = arr[randomIndexToSwap];
+            arr[randomIndexToSwap] = arr[i];
+            arr[i] = temp;
         }
     }
 
